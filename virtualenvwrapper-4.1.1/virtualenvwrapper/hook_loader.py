@@ -84,9 +84,7 @@ def main():
 
     root_logger = logging.getLogger('')
 
-    # Set up logging to a file
-    logfile = os.environ.get('VIRTUALENVWRAPPER_LOG_FILE')
-    if logfile:
+    if logfile := os.environ.get('VIRTUALENVWRAPPER_LOG_FILE'):
         root_logger.setLevel(logging.DEBUG)
         file_handler = GroupWriteRotatingFileHandler(
             logfile,
@@ -139,7 +137,7 @@ def main():
             output.write('# %s\n' % hook)
             # output.write('echo %s\n' % hook)
             # output.write('set -x\n')
-            run_hooks(hook + '_source', options, args, output)
+            run_hooks(f'{hook}_source', options, args, output)
         finally:
             output.close()
 
@@ -150,7 +148,7 @@ def run_hooks(hook, options, args, output=None):
     if output is None:
         output = sys.stdout
 
-    namespace = 'virtualenvwrapper.%s' % hook
+    namespace = f'virtualenvwrapper.{hook}'
     if options.names:
         hook_mgr = NamedExtensionManager(namespace, options.names)
     else:
